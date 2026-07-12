@@ -6,24 +6,37 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from src.database.base import Base
 from src.database.mixins import ReprMixin
 
 if TYPE_CHECKING:
     from src.models.department import Department
-    from src.models.research_group import ResearchGroup
-    from src.models.lecturer_qualification import LecturerQualification
+    from src.models.lecturer_committee_membership import (
+        LecturerCommitteeMembership,
+    )
+    from src.models.lecturer_course_teaching import (
+        LecturerCourseTeaching,
+    )
     from src.models.lecturer_expertise import LecturerExpertise
-    from src.models.lecturer_research_interest import LecturerResearchInterest
     from src.models.lecturer_publication import LecturerPublication
-    from src.models.student import Student
-    from src.models.lecturer_course_teaching import LecturerCourseTeaching
-    from src.models.lecturer_committee_membership import LecturerCommitteeMembership
+    from src.models.lecturer_qualification import LecturerQualification
+    from src.models.lecturer_research_interest import (
+        LecturerResearchInterest,
+    )
+    from src.models.research_group import ResearchGroup
     from src.models.research_project import ResearchProject
-    from src.models.research_project_team import ResearchProjectTeam
+    from src.models.research_project_team import (
+        ResearchProjectTeam,
+    )
+    from src.models.student import Student
+
 
 class Lecturer(Base, ReprMixin):
     """
@@ -48,8 +61,8 @@ class Lecturer(Base, ReprMixin):
 
     email: Mapped[str] = mapped_column(
         String(120),
-        unique=True,
         nullable=False,
+        unique=True,
     )
 
     phone: Mapped[str | None] = mapped_column(
@@ -64,8 +77,8 @@ class Lecturer(Base, ReprMixin):
 
     course_load: Mapped[int] = mapped_column(
         Integer,
-        default=0,
         nullable=False,
+        default=0,
     )
 
     research_group_id: Mapped[int | None] = mapped_column(
@@ -78,8 +91,10 @@ class Lecturer(Base, ReprMixin):
         nullable=True,
     )
 
+    # Relationships
+
     department: Mapped["Department"] = relationship(
-        back_populates="lecturers"
+        back_populates="lecturers",
     )
 
     research_group: Mapped["ResearchGroup | None"] = relationship(
