@@ -14,6 +14,13 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from PyQt6.QtWidgets import (
+    QFormLayout,
+    QGroupBox,
+    QLineEdit,
+    QComboBox,
+)
+
 from PyQt6.QtWidgets import QMessageBox
 
 from src.gui.dialogs.student_dialog import StudentDialog
@@ -52,6 +59,8 @@ class StudentWidget(QWidget):
 
         self.load_students()
 
+        self.load_filters()
+
     def _build_ui(self) -> None:
         """
         Create the user interface.
@@ -68,6 +77,69 @@ class StudentWidget(QWidget):
         )
 
         main_layout.addWidget(title)
+
+        search_group = QGroupBox("Search & Filters")
+
+        search_layout = QFormLayout(search_group)
+
+        self.search_field_combo = QComboBox()
+
+        self.search_field_combo.addItem(
+            "First Name",
+            "first_name",
+        )
+
+        self.search_field_combo.addItem(
+            "Last Name",
+            "last_name",
+        )
+
+        self.search_field_combo.addItem(
+            "Email",
+            "email",
+        )
+
+        self.search_edit = QLineEdit()
+
+        self.program_filter = QComboBox()
+
+        self.year_filter = QComboBox()
+
+        self.status_filter = QComboBox()
+
+        self.clear_button = QPushButton("Clear")
+
+        search_layout.addRow(
+            "Search By",
+            self.search_field_combo,
+        )
+
+        search_layout.addRow(
+            "Search",
+            self.search_edit,
+        )
+
+        search_layout.addRow(
+            "Program",
+            self.program_filter,
+        )
+
+        search_layout.addRow(
+            "Year",
+            self.year_filter,
+        )
+
+        search_layout.addRow(
+            "Graduation Status",
+            self.status_filter,
+        )
+
+        search_layout.addRow(
+            "",
+            self.clear_button,
+        )
+
+        main_layout.addWidget(search_group)
 
         # Table
 
@@ -130,7 +202,31 @@ class StudentWidget(QWidget):
         # Signals
 
         self.refresh_button.clicked.connect(
-            self.load_students
+            self.load_students,
+        )
+
+        self.clear_button.clicked.connect(
+            self.clear_filters,
+        )
+
+        self.search_edit.returnPressed.connect(
+            self.search_students,
+        )
+
+        self.search_field_combo.currentIndexChanged.connect(
+            self.search_students,
+        )
+
+        self.program_filter.currentIndexChanged.connect(
+            self.search_students,
+        )
+
+        self.year_filter.currentIndexChanged.connect(
+            self.search_students,
+        )
+
+        self.status_filter.currentIndexChanged.connect(
+            self.search_students,
         )
 
         self.add_button.clicked.connect(
@@ -343,3 +439,95 @@ class StudentWidget(QWidget):
             "Success",
             "Student deleted successfully.",
         )
+    
+    def load_filters(self) -> None:
+        """
+        Populate filter combo boxes.
+        """
+
+        self.program_filter.clear()
+
+        self.program_filter.addItem(
+            "All Programs",
+            None,
+        )
+
+        for program in self._program_repository.get_program_names():
+
+            self.program_filter.addItem(
+                program.program_name,
+                program.program_id,
+            )
+
+        self.year_filter.clear()
+
+        self.year_filter.addItem(
+            "All Years",
+            None,
+        )
+
+        for year in range(1, 11):
+
+            self.year_filter.addItem(
+                str(year),
+                year,
+            )
+
+        self.status_filter.clear()
+
+        self.status_filter.addItem(
+            "All",
+            None,
+        )
+
+        self.status_filter.addItem(
+            "Not Graduated",
+            "Not Graduated",
+        )
+
+        self.status_filter.addItem(
+            "Graduated",
+            "Graduated",
+        )
+
+    def search_students(self, *args) -> None:
+        """
+        Search students.
+        """
+
+        students = self._service.search_students(
+            search_field=self.search_field_combo.currentData(),
+            search_text=self.search_edit.text(),
+            program_id=self.program_filter.currentData(),
+            year_of_study=self.year_filter.currentData(),
+            graduation_status=self.status_filter.currentData(),
+        )
+
+        self.model.set_students(students)
+
+        self.status_label.setText(
+            f"{len(students)} student(s)"
+        )
+    
+    def clear_filters(self) -> None:
+        """
+        Reset every search control.
+        """
+
+        self.search_field_combo.blockSignals(True)
+        self.program_filter.blockSignals(True)
+        self.year_filter.blockSignals(True)
+        self.status_filter.blockSignals(True)
+
+        self.search_field_combo.setCurrentIndex(0)
+        self.search_edit.clear()
+        self.program_filter.setCurrentIndex(0)
+        self.year_filter.setCurrentIndex(0)
+        self.status_filter.setCurrentIndex(0)
+
+        self.search_field_combo.blockSignals(False)
+        self.program_filter.blockSignals(False)
+        self.year_filter.blockSignals(False)
+        self.status_filter.blockSignals(False)
+
+        self.load_students()

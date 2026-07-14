@@ -13,6 +13,8 @@ from PyQt6.QtWidgets import QLabel
 
 from src.gui.widgets.dashboard_widget import DashboardWidget
 from src.gui.widgets.student_widget import StudentWidget
+from src.gui.widgets.lecturer_widget import LecturerWidget
+
 
 
 class MainWindow(QMainWindow):
@@ -51,9 +53,11 @@ class MainWindow(QMainWindow):
 
         self.dashboard_page = DashboardWidget()
         self.student_page = StudentWidget()
+        self.lecturer_page = LecturerWidget()
 
         self.pages.addWidget(self.dashboard_page)
         self.pages.addWidget(self.student_page)
+        self.pages.addWidget(self.lecturer_page)
 
         splitter.addWidget(self.navigation)
         splitter.addWidget(self.pages)
@@ -72,12 +76,8 @@ class MainWindow(QMainWindow):
             self.change_page
         )
 
-        self.navigation.setCurrentRow(0)
+        self.navigation.setCurrentRow(0)     
 
-        self.pages.addWidget(self.dashboard_page)
-        self.pages.addWidget(self.student_page)
-
-        self.pages.addWidget(QLabel("Lecturers - Coming Soon"))
         self.pages.addWidget(QLabel("Courses - Coming Soon"))
         self.pages.addWidget(QLabel("Staff - Coming Soon"))
         self.pages.addWidget(QLabel("Research - Coming Soon"))

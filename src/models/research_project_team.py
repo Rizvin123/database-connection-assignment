@@ -28,26 +28,28 @@ class ResearchProjectTeam(Base, ReprMixin):
 
     __tablename__ = "research_project_team"
 
+    project_team_id: Mapped[int] = mapped_column(
+        primary_key=True,
+    )
+
     project_id: Mapped[int] = mapped_column(
         ForeignKey("research_projects.project_id"),
-        primary_key=True,
+        nullable=False,
     )
 
     lecturer_id: Mapped[int | None] = mapped_column(
         ForeignKey("lecturers.lecturer_id"),
-        primary_key=True,
         nullable=True,
     )
 
     staff_id: Mapped[int | None] = mapped_column(
         ForeignKey("staff.staff_id"),
-        primary_key=True,
         nullable=True,
     )
 
-    project_role: Mapped[str | None] = mapped_column(
+    team_role: Mapped[str] = mapped_column(
         String(100),
-        nullable=True,
+        nullable=False,
     )
 
     # Relationships
