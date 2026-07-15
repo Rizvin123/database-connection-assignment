@@ -254,6 +254,26 @@ class CourseWidget(QWidget):
             self.delete_course,
         )
 
+        self.clear_button.clicked.connect(
+            self.clear_filters,
+        )
+
+        self.search_edit.returnPressed.connect(
+            self.search_courses,
+        )
+
+        self.search_field_combo.currentIndexChanged.connect(
+            self.search_courses,
+        )
+
+        self.department_filter.currentIndexChanged.connect(
+            self.search_courses,
+        )
+
+        self.level_filter.currentIndexChanged.connect(
+            self.search_courses,
+        )
+
     def load_courses(
         self,
     ) -> None:
@@ -271,9 +291,7 @@ class CourseWidget(QWidget):
             f"{len(courses)} course(s)"
         )
 
-    def load_filters(
-        self,
-    ) -> None:
+    def load_filters(self) -> None:
         """
         Populate filter controls.
         """
@@ -501,3 +519,49 @@ class CourseWidget(QWidget):
             "Success",
             "Course deleted successfully.",
         )
+
+    def search_courses(
+        self,
+        *args,
+    ) -> None:
+        """
+        Search courses.
+        """
+
+        courses = self._service.search_courses(
+            search_field=self.search_field_combo.currentData(),
+            search_text=self.search_edit.text().strip(),
+            department_id=self.department_filter.currentData(),
+            level=self.level_filter.currentData(),
+        )
+
+        self.model.set_courses(
+            courses,
+        )
+
+        self.status_label.setText(
+            f"{len(courses)} course(s)"
+        )
+
+    def clear_filters(self) -> None:
+        """
+        Reset all search controls.
+        """
+
+        self.search_field_combo.blockSignals(True)
+        self.department_filter.blockSignals(True)
+        self.level_filter.blockSignals(True)
+
+        self.search_field_combo.setCurrentIndex(0)
+
+        self.search_edit.clear()
+
+        self.department_filter.setCurrentIndex(0)
+
+        self.level_filter.setCurrentIndex(0)
+
+        self.search_field_combo.blockSignals(False)
+        self.department_filter.blockSignals(False)
+        self.level_filter.blockSignals(False)
+
+        self.load_courses()
