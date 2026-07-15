@@ -16,6 +16,8 @@ from src.gui.widgets.student_widget import StudentWidget
 from src.gui.widgets.lecturer_widget import LecturerWidget
 from src.gui.widgets.course_widget import CourseWidget
 from src.gui.widgets.staff_widget import StaffWidget
+from src.gui.widgets.research_group_widget import ResearchGroupWidget
+from src.gui.widgets.queries_widget import QueriesWidget
 
 
 
@@ -58,12 +60,17 @@ class MainWindow(QMainWindow):
         self.lecturer_page = LecturerWidget()
         self.course_page = CourseWidget()
         self.staff_page = StaffWidget()
+        self.research_group_page = ResearchGroupWidget()
+        self.queries_page = QueriesWidget()
 
         self.pages.addWidget(self.dashboard_page)
         self.pages.addWidget(self.student_page)
         self.pages.addWidget(self.lecturer_page)
         self.pages.addWidget(self.course_page)
         self.pages.addWidget(self.staff_page)
+        self.pages.addWidget(self.research_group_page)
+        self.pages.addWidget(self.queries_page)
+
         splitter.addWidget(self.navigation)
         splitter.addWidget(self.pages)
 
@@ -82,9 +89,6 @@ class MainWindow(QMainWindow):
         )
 
         self.navigation.setCurrentRow(0)     
-
-        self.pages.addWidget(QLabel("Research - Coming Soon"))
-        self.pages.addWidget(QLabel("Queries - Coming Soon"))
 
     def change_page(
         self,
