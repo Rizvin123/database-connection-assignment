@@ -92,13 +92,18 @@ tests/
 1. Download or clone the project  
 2. Open the project folder  
 3. Restore Database and ensure Mysql server is running on localhost:3306
-4. Create .env with the following parameters
+4. Create .env with the following parameters (Create every param on a new line)
 DB_HOST=localhost
+
 DB_PORT=3306
+
 DB_NAME=university_records
+
 DB_USER=< Your SuperUser username >
+
 DB_PASSWORD=< Your SuperUser password >
-8. Run the following command from root of the folder to use the application.
+
+10. Run the following command from root of the folder to use the application.
 
 pip install -r requirements.txt (One time only, to download the dependencies)
 python -m src.main (to run the application)
