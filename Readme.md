@@ -98,7 +98,7 @@ DB_PORT=3306
 DB_NAME=university_records
 DB_USER=< Your SuperUser username >
 DB_PASSWORD=< Your SuperUser password >
-6. Run the following command from root of the folder to use the application.
+8. Run the following command from root of the folder to use the application.
 
 pip install -r requirements.txt (One time only, to download the dependencies)
 python -m src.main (to run the application)
