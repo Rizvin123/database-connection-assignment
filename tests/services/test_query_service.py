@@ -19,7 +19,7 @@ def test_students_by_course_and_lecturer(
 
     results = (
         service.students_by_course_and_lecturer(
-            course_code="CS101",
+            course_code="CS301",
             lecturer_id=1,
             semester="Semester 1",
             academic_year="2025/2026",
