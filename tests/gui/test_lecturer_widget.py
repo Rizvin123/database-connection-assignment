@@ -14,9 +14,12 @@ from PyQt6.QtWidgets import (
     QDialogButtonBox,
     QMessageBox,
 )
+from src.database.session import SessionLocal
 from src.models.lecturer import Lecturer
+from src.models.research_group import ResearchGroup
 from src.gui.dialogs.lecturer_dialog import LecturerDialog
 from src.gui.widgets.lecturer_widget import LecturerWidget
+from src.services.research_group_service import ResearchGroupService
 
 
 def test_widget_loads(qtbot) -> None:
@@ -57,6 +60,44 @@ def test_status_label(qtbot) -> None:
     widget.show()
 
     assert "lecturer" in widget.status_label.text().lower()
+
+
+def test_reload_data_includes_new_research_group(qtbot) -> None:
+    """
+    Verify reloading shows a group committed by another session.
+    """
+
+    widget = LecturerWidget()
+
+    qtbot.addWidget(widget)
+
+    session = SessionLocal()
+
+    service = ResearchGroupService(session)
+
+    group = ResearchGroup(
+        group_name=f"Refresh Test {uuid.uuid4()}",
+        department_id=1,
+    )
+
+    service.create_research_group(group)
+
+    try:
+
+        widget.reload_data()
+
+        assert (
+            widget.research_group_filter.findData(
+                group.research_group_id,
+            )
+            != -1
+        )
+
+    finally:
+
+        service.delete_research_group(group.research_group_id)
+
+        session.close()
 
 def test_add_lecturer(qtbot) -> None:
     """

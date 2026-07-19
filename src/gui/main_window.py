@@ -101,6 +101,11 @@ class MainWindow(QMainWindow):
         if index < self.pages.count():
 
             if index == self.pages.indexOf(
+                self.lecturer_page,
+            ):
+                self.lecturer_page.reload_data()
+
+            elif index == self.pages.indexOf(
                 self.research_group_page,
             ):
                 self.research_group_page.reload_data()

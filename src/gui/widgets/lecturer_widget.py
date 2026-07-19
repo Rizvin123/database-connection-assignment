@@ -268,7 +268,7 @@ class LecturerWidget(QWidget):
         #
 
         self.refresh_button.clicked.connect(
-            self.load_lecturers,
+            self.reload_data,
         )
 
         self.clear_button.clicked.connect(
@@ -319,6 +319,19 @@ class LecturerWidget(QWidget):
         self.status_label.setText(
             f"{len(lecturers)} lecturer(s)"
         )
+
+    def reload_data(
+        self,
+    ) -> None:
+        """
+        Reload data using a new database transaction.
+        """
+
+        self._session.rollback()
+
+        self.load_lecturers()
+
+        self.load_filters()
 
     def closeEvent(
         self,
