@@ -312,6 +312,21 @@ class ResearchGroupWidget(QWidget):
             f"{len(groups)} research group(s)"
         )
 
+        self.load_filters()
+
+    def reload_data(
+        self,
+    ) -> None:
+        """
+        Reload data using a new database transaction.
+        """
+
+        self._session.rollback()
+
+        self.load_research_groups()
+
+        self.load_filters()
+
     def load_filters(
         self,
     ) -> None:

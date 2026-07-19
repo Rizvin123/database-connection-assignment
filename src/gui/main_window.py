@@ -99,4 +99,10 @@ class MainWindow(QMainWindow):
         """
 
         if index < self.pages.count():
+
+            if index == self.pages.indexOf(
+                self.research_group_page,
+            ):
+                self.research_group_page.reload_data()
+
             self.pages.setCurrentIndex(index)
