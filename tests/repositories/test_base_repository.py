@@ -6,6 +6,8 @@ import uuid
 
 from datetime import date
 
+from sqlalchemy import inspect
+
 from src.models.student import Student
 from src.repositories.base_repository import BaseRepository
 
@@ -90,6 +92,8 @@ def test_save_student(session) -> None:
     student.phone = "1234567890"
 
     repository.save()
+
+    assert inspect(student).expired
 
     updated = repository.get_by_id(student.student_id)
 

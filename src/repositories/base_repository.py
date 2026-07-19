@@ -89,6 +89,8 @@ class BaseRepository(Generic[T]):
 
         self._session.commit()
 
+        self._session.expire_all()
+
     def delete(
         self,
         entity: T,
